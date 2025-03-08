@@ -9,6 +9,8 @@ A Flutter package for reading and parsing comic book archives such as CBZ, CBT, 
 - Zoom, pan, and scroll through comic pages
 - Simple file picker integration
 - Full-featured viewer with page controls
+<img src="https://github.com/user-attachments/assets/6c89b041-fe50-4255-ab60-4e9c484de3ba" width="200" height="350">
+
 
 ## Installation
 
