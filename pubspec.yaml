@@ -1,6 +1,6 @@
 name: comic_reader
 description: A Flutter package for reading and parsing comic book archives (CBZ, CBT, etc.).
-version: 0.1.0
+version: 0.2.0
 homepage: https://github.com/lkrjangid1/comic_reader
 
 environment:
