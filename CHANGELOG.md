@@ -1,3 +1,11 @@
+## 0.4.0
+
+Upgrade docs and dependencies:
+
+* Update documentation
+* Update dependencies
+
+
 ## 0.3.0
 
 Add screenshot:

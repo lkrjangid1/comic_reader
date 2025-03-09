@@ -1,7 +1,8 @@
 name: comic_reader
 description: A Flutter package for reading and parsing comic book archives (CBZ, CBT, etc.).
-version: 0.3.0
+version: 0.4.0
 homepage: https://github.com/lkrjangid1/comic_reader
+issue_tracker: https://github.com/lkrjangid1/comic_reader/issues
 
 environment:
   sdk: ">=2.17.0 <4.0.0"
@@ -10,16 +11,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  archive: ^3.3.0
+  archive: ^4.0.4
   path: ^1.8.0
   path_provider: ^2.0.10
-  photo_view: ^0.14.0
-  file_picker: ^5.2.0
+  photo_view: ^0.15.0
+  file_picker: ^8.3.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
 
 flutter:
   # No assets included in the package
