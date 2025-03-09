@@ -15,19 +15,19 @@ import '../models/comic_model.dart';
 class ComicViewer extends StatefulWidget {
   /// The comic model containing the comic data including pages to display.
   final ComicModel comic;
-  
+
   /// The initial page index to display when the viewer is first opened.
   /// Defaults to 0 (first page).
   final int initialPage;
-  
+
   /// Whether to show navigation controls like the app bar and page slider.
   /// Defaults to true.
   final bool showControls;
-  
+
   /// The background color of the comic viewer.
   /// Defaults to black for a standard comic reading experience.
   final Color backgroundColor;
-  
+
   /// Creates a comic viewer widget.
   ///
   /// The [comic] parameter is required and contains the comic data to display.
@@ -50,10 +50,10 @@ class ComicViewer extends StatefulWidget {
 class _ComicViewerState extends State<ComicViewer> {
   /// Controls the current page being displayed and handles page transitions.
   late PageController _pageController;
-  
+
   /// Tracks the index of the currently displayed page.
   late int _currentPage;
-  
+
   /// Determines whether the navigation controls are currently visible.
   /// Controls are toggled by tapping on the comic page.
   bool _isControlsVisible = true;
@@ -111,7 +111,8 @@ class _ComicViewerState extends State<ComicViewer> {
               scrollPhysics: const BouncingScrollPhysics(),
               builder: (BuildContext context, int index) {
                 return PhotoViewGalleryPageOptions(
-                  imageProvider: FileImage(File(widget.comic.comicPages[index])),
+                  imageProvider:
+                      FileImage(File(widget.comic.comicPages[index])),
                   initialScale: PhotoViewComputedScale.contained,
                   minScale: PhotoViewComputedScale.contained * 0.8,
                   maxScale: PhotoViewComputedScale.covered * 2,
@@ -120,7 +121,9 @@ class _ComicViewerState extends State<ComicViewer> {
               itemCount: widget.comic.comicPages.length,
               loadingBuilder: (context, event) => Center(
                 child: CircularProgressIndicator(
-                  value: event == null ? 0 : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
+                  value: event == null
+                      ? 0
+                      : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
                 ),
               ),
               pageController: _pageController,
@@ -129,10 +132,11 @@ class _ComicViewerState extends State<ComicViewer> {
                   _currentPage = index;
                 });
               },
-              backgroundDecoration: BoxDecoration(color: widget.backgroundColor),
+              backgroundDecoration:
+                  BoxDecoration(color: widget.backgroundColor),
             ),
           ),
-          
+
           // Controls
           if (widget.showControls && _isControlsVisible)
             Positioned(
@@ -151,7 +155,7 @@ class _ComicViewerState extends State<ComicViewer> {
                       style: const TextStyle(color: Colors.white),
                     ),
                     const SizedBox(height: 8.0),
-                    
+
                     // Page slider
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -169,7 +173,7 @@ class _ComicViewerState extends State<ComicViewer> {
                 ),
               ),
             ),
-            
+
           // App bar with title
           if (widget.showControls && _isControlsVisible)
             Positioned(

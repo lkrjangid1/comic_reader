@@ -16,10 +16,10 @@ import '../models/comic_model.dart';
 enum ArchiveType {
   /// ZIP archive format, used in CBZ and ZIP files
   zip,
-  
+
   /// TAR archive format, used in CBT and TAR files
   tar;
-  
+
   @override
   String toString() => name;
 }
@@ -70,13 +70,15 @@ class ComicReaderParser {
 
       final fileExt = path.extension(filePath).toLowerCase();
       currentComicName = path.basenameWithoutExtension(filePath);
-      
+
       // Map comic extensions to their actual archive types for naming clarity
-      final List<String> extractedFiles = await _parseArchiveByExtension(file, fileExt);
-      
+      final List<String> extractedFiles =
+          await _parseArchiveByExtension(file, fileExt);
+
       // Sort files for proper reading order
       extractedFiles.sort();
-      return ComicModel(comicPages: extractedFiles, comicName: currentComicName);
+      return ComicModel(
+          comicPages: extractedFiles, comicName: currentComicName);
     } catch (e) {
       print('Error in pickAndParseComicFile: $e');
       throw Exception('Error parsing comic file: $e');
@@ -97,7 +99,8 @@ class ComicReaderParser {
   ///
   /// Throws:
   /// * [UnsupportedError] for unsupported file extensions
-  Future<List<String>> _parseArchiveByExtension(File file, String fileExt) async {
+  Future<List<String>> _parseArchiveByExtension(
+      File file, String fileExt) async {
     switch (fileExt) {
       case '.cbz':
         return await _extractArchive(file, '.cbz', ArchiveType.zip);
@@ -108,7 +111,8 @@ class ComicReaderParser {
       case '.tar':
         return await _extractArchive(file, '.tar', ArchiveType.tar);
       case '.cbw':
-        return await _extractArchive(file, '.cbw', ArchiveType.zip); // CBW is essentially ZIP
+        return await _extractArchive(
+            file, '.cbw', ArchiveType.zip); // CBW is essentially ZIP
       default:
         throw UnsupportedError('Unsupported comic format: $fileExt');
     }
@@ -147,21 +151,24 @@ class ComicReaderParser {
   ///
   /// Throws:
   /// * [Exception] if the file is empty or decoding fails
-  Future<List<String>> _extractArchive(File oldFile, String fileType, ArchiveType type) async {
+  Future<List<String>> _extractArchive(
+      File oldFile, String fileType, ArchiveType type) async {
     try {
-      File file = await changeFileNameOnly(oldFile, currentComicName
-          .replaceAll(RegExp(r'[<>:"/\\|?*]'), '_')
-          .replaceAll(' ', '_')
-          .replaceAll(fileType, '.${type.toString()}'));
-      
+      File file = await changeFileNameOnly(
+          oldFile,
+          currentComicName
+              .replaceAll(RegExp(r'[<>:"/\\|?*]'), '_')
+              .replaceAll(' ', '_')
+              .replaceAll(fileType, '.${type.toString()}'));
+
       final Uint8List bytes = await file.readAsBytes();
       if (bytes.isEmpty) {
         throw Exception('File is empty');
       }
-      
+
       Archive archive;
       final String typeStr = type.toString();
-      
+
       try {
         switch (type) {
           case ArchiveType.zip:
@@ -180,11 +187,12 @@ class ComicReaderParser {
         print('Error decoding $typeStr archive: $e');
         rethrow;
       }
-      
+
       return await _extractImageFiles(archive, typeStr);
     } catch (e) {
       print('Error extracting $type archive: $e');
-      throw Exception('Failed to parse ${type.toString().toUpperCase()} archive: $e');
+      throw Exception(
+          'Failed to parse ${type.toString().toUpperCase()} archive: $e');
     }
   }
 
@@ -206,11 +214,13 @@ class ComicReaderParser {
   ///
   /// Throws:
   /// * [Exception] if extraction fails
-  Future<List<String>> _extractImageFiles(Archive archive, String archiveType) async {
+  Future<List<String>> _extractImageFiles(
+      Archive archive, String archiveType) async {
     try {
       final List<String> extractedFiles = [];
       final tempDir = await getTemporaryDirectory();
-      final archiveDirName = '${currentComicName}_$archiveType'; // Add archive type to folder name
+      final archiveDirName =
+          '${currentComicName}_$archiveType'; // Add archive type to folder name
       final comicDir = await Directory('${tempDir.path}/$archiveDirName')
           .create(recursive: true);
 
@@ -221,22 +231,32 @@ class ComicReaderParser {
       }
 
       // Valid image extensions
-      final validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
-      
+      final validExtensions = [
+        '.jpg',
+        '.jpeg',
+        '.png',
+        '.gif',
+        '.webp',
+        '.bmp'
+      ];
+
       // Extract only image files
       for (final file in archive) {
         if (!file.isFile) continue;
-        
+
         final fileName = file.name.toLowerCase();
-        final isImageFile = validExtensions.any((ext) => fileName.endsWith(ext));
-        
+        final isImageFile =
+            validExtensions.any((ext) => fileName.endsWith(ext));
+
         if (isImageFile) {
           try {
             final data = file.content as List<int>;
             // Create a more descriptive filename that includes original path structure
-            final sanitizedName = path.basename(file.name).replaceAll(RegExp(r'[<>:"/\\|?*]'), '_');
+            final sanitizedName = path
+                .basename(file.name)
+                .replaceAll(RegExp(r'[<>:"/\\|?*]'), '_');
             final filePath = '${comicDir.path}/$sanitizedName';
-            
+
             await File(filePath).writeAsBytes(data);
             extractedFiles.add(filePath);
           } catch (e) {
@@ -245,11 +265,11 @@ class ComicReaderParser {
           }
         }
       }
-      
+
       if (extractedFiles.isEmpty) {
         print('Warning: No image files found in $archiveType archive');
       }
-      
+
       return extractedFiles;
     } catch (e) {
       print('Error extracting image files: $e');

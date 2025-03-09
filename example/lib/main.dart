@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _currentComic = comic;
     });
-    
+
     Navigator.push(
       context,
       MaterialPageRoute(

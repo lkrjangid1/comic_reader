@@ -44,7 +44,7 @@ class ComicPicker extends StatefulWidget {
   ///
   /// If not provided, defaults to a centered [CircularProgressIndicator].
   final Widget? loadingWidget;
-  
+
   /// Creates a new [ComicPicker] widget.
   ///
   /// The [onComicLoaded] callback is required and will be called when a
@@ -100,15 +100,15 @@ class _ComicPickerState extends State<ComicPicker> {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: widget.allowedExtensions
-            .map((e) => e.replaceAll('.', ''))
-            .toList(),
+        allowedExtensions:
+            widget.allowedExtensions.map((e) => e.replaceAll('.', '')).toList(),
       );
 
       if (result != null && result.files.single.path != null) {
         final parser = ComicReaderParser();
-        final comicModel = await parser.pickAndParseComicFile(result.files.single.path!);
-        
+        final comicModel =
+            await parser.pickAndParseComicFile(result.files.single.path!);
+
         if (mounted) {
           widget.onComicLoaded(comicModel);
         }
@@ -131,8 +131,8 @@ class _ComicPickerState extends State<ComicPicker> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return widget.loadingWidget ?? 
-        const Center(child: CircularProgressIndicator());
+      return widget.loadingWidget ??
+          const Center(child: CircularProgressIndicator());
     }
 
     return ElevatedButton.icon(
